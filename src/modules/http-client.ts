@@ -1,6 +1,37 @@
 import { IPCError } from '../types';
 
 /**
+ * Makes an HTTP request with timeout, error handling and fallback support
+ *
+ * @param urls - Array of request URLs to try in order
+ * @param apiKey - Optional API key for authentication
+ * @param timeout - Request timeout in milliseconds
+ * @returns Response data
+ */
+export async function makeRequestWithFallback<T>(
+  urls: string[],
+  apiKey: string | undefined,
+  timeout: number
+): Promise<T> {
+  let lastError: Error | null = null;
+
+  for (let i = 0; i < urls.length; i++) {
+    try {
+      return await makeRequest<T>(urls[i], apiKey, timeout);
+    } catch (error) {
+      lastError = error as Error;
+      // If this is not the last URL, continue to the next one
+      if (i < urls.length - 1) {
+        continue;
+      }
+    }
+  }
+
+  // If all requests failed, throw the last error
+  throw lastError || new IPCError('All requests failed');
+}
+
+/**
  * Makes an HTTP request with timeout and error handling
  *
  * @param url - Request URL

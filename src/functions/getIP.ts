@@ -2,12 +2,12 @@ import { IPResponse, IPCError } from '../types';
 import { API_VERSION } from '../modules/constants';
 import { buildUrl } from '../modules/url-utils';
 import { validateIPResponse } from '../modules/validators';
-import { makeRequest } from '../modules/http-client';
+import { makeRequestWithFallback } from '../modules/http-client';
 
 /**
  * Retrieves basic IP information from the API
  *
- * @param baseUrl - The base URL for the API
+ * @param baseUrls - Array of base URLs for the API (will try in order)
  * @param apiKey - Optional API key for authentication
  * @param timeout - Request timeout in milliseconds
  * @returns IP information with country code
@@ -15,17 +15,17 @@ import { makeRequest } from '../modules/http-client';
  *
  * @example
  * ```typescript
- * const data = await getIP('https://api.example.com', 'YOUR_API_KEY', 5000);
+ * const data = await getIP(['https://api.example.com'], 'YOUR_API_KEY', 5000);
  * console.log(`Your IP: ${data.ip}, Country: ${data.country}`);
  * ```
  */
 export async function getIP(
-  baseUrl: string,
+  baseUrls: string[],
   apiKey: string | undefined,
   timeout: number
 ): Promise<IPResponse> {
-  const url = buildUrl(baseUrl, `/api/${API_VERSION}/ip`);
-  const data = await makeRequest<unknown>(url, apiKey, timeout);
+  const urls = baseUrls.map(baseUrl => buildUrl(baseUrl, `/api/${API_VERSION}/ip`));
+  const data = await makeRequestWithFallback<unknown>(urls, apiKey, timeout);
 
   // Validate response structure
   if (!validateIPResponse(data)) {
