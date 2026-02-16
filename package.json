@@ -28,8 +28,16 @@
     "sdk",
     "api"
   ],
-  "author": "",
+  "author": "Artsnoa.com(mirseo) <aurora@artsnoa.com>",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Artsnoa/IPC-Javascript-SDK.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Artsnoa/IPC-Javascript-SDK/issues"
+  },
+  "homepage": "https://ipc.artsnoa.com",
   "packageManager": "pnpm@10.28.2",
   "devDependencies": {
     "@types/node": "^22.0.0",

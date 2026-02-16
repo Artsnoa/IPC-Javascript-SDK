@@ -1,8 +1,9 @@
 import { IPCClientOptions, IPResponse, IPDetailsResponse, SDKVersionsResponse, IPCError } from './types';
-import { DEFAULT_BASE_URL, DEFAULT_TIMEOUT, API_VERSION } from './modules/constants';
-import { sanitizeBaseUrl, buildUrl } from './modules/url-utils';
-import { validateIPResponse, validateIPDetailsResponse, validateSDKVersionsResponse } from './modules/validators';
-import { makeRequest } from './modules/http-client';
+import { DEFAULT_BASE_URL, DEFAULT_TIMEOUT } from './modules/constants';
+import { sanitizeBaseUrl } from './modules/url-utils';
+import { getIP } from './functions/getIP';
+import { getIPDetails } from './functions/getIPDetails';
+import { getSDKVersions } from './functions/getSDKVersions';
 
 /**
  * IPCClient - Client for interacting with the IPC API
@@ -56,15 +57,7 @@ export class IPCClient {
    * ```
    */
   public async getIP(): Promise<IPResponse> {
-    const url = buildUrl(this.baseUrl, `/api/${API_VERSION}/ip`);
-    const data = await makeRequest<unknown>(url, this.apiKey, this.timeout);
-
-    // Validate response structure
-    if (!validateIPResponse(data)) {
-      throw new IPCError('Invalid response structure from API');
-    }
-
-    return data;
+    return getIP(this.baseUrl, this.apiKey, this.timeout);
   }
 
   /**
@@ -87,15 +80,7 @@ export class IPCClient {
    * ```
    */
   public async getIPDetails(): Promise<IPDetailsResponse> {
-    const url = buildUrl(this.baseUrl, `/api/${API_VERSION}/ip/details`);
-    const data = await makeRequest<unknown>(url, this.apiKey, this.timeout);
-
-    // Validate response structure
-    if (!validateIPDetailsResponse(data)) {
-      throw new IPCError('Invalid response structure from API');
-    }
-
-    return data;
+    return getIPDetails(this.baseUrl, this.apiKey, this.timeout);
   }
 
   /**
@@ -118,14 +103,6 @@ export class IPCClient {
    * ```
    */
   public async getSDKVersions(): Promise<SDKVersionsResponse> {
-    const url = buildUrl(this.baseUrl, `/api/${API_VERSION}/sdk/version`);
-    const data = await makeRequest<unknown>(url, this.apiKey, this.timeout);
-
-    // Validate response structure
-    if (!validateSDKVersionsResponse(data)) {
-      throw new IPCError('Invalid response structure from API');
-    }
-
-    return data;
+    return getSDKVersions(this.baseUrl, this.apiKey, this.timeout);
   }
 }

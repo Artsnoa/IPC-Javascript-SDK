@@ -13,6 +13,13 @@ async function testIPCAPI() {
   // Create client instance
   const client = new IPCClient({ apiKey: API_KEY });
 
+  // Test getIP()
+  console.log('Testing getIP()...');
+  const ip = await client.getIP();
+  console.log(ip);
+
+  console.log('\n');
+
   // Test getIPDetails()
   console.log('Testing getIPDetails()...');
   const ipDetails = await client.getIPDetails();
