@@ -22,7 +22,7 @@ export function sanitizeBaseUrl(url: string): string {
     if (error instanceof IPCError) {
       throw error;
     }
-    throw new IPCError(`Invalid base URL: ${url}`);
+    throw new IPCError('Invalid base URL format. Please provide a valid HTTPS URL');
   }
 }
 
