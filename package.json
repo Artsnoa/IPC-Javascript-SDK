@@ -29,7 +29,7 @@
     "api"
   ],
   "author": "Artsnoa.com(mirseo) <aurora@artsnoa.com>",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Artsnoa/IPC-Javascript-SDK.git"

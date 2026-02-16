@@ -11,9 +11,9 @@ export function sanitizeBaseUrl(url: string): string {
     // @ts-ignore - URL is available in supported environments
     const parsedUrl = new URL(url);
 
-    // Only allow https and http protocols
-    if (parsedUrl.protocol !== 'https:' && parsedUrl.protocol !== 'http:') {
-      throw new IPCError('Base URL must use http or https protocol');
+    // Only allow https protocol for security
+    if (parsedUrl.protocol !== 'https:') {
+      throw new IPCError('Base URL must use https protocol. HTTP is not allowed for security reasons');
     }
 
     // Remove trailing slash
