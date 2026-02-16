@@ -29,6 +29,7 @@ export {
   IPCError
 } from './types';export type {
   IPCClientOptions,
-  IPDetailsResponse
+  IPDetailsResponse,
+  SDKVersionsResponse
 } from './types';
 

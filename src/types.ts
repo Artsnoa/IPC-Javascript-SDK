@@ -66,6 +66,21 @@ export interface IPDetailsResponse {
 }
 
 /**
+ * Response from the SDK versions API
+ */
+export interface SDKVersionsResponse {
+  /**
+   * JavaScript SDK version
+   */
+  javascript: string;
+
+  /**
+   * Python SDK version
+   */
+  python: string;
+}
+
+/**
  * Custom error class for IPC SDK errors
  */
 export class IPCError extends Error {
