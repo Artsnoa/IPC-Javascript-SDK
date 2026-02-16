@@ -1,6 +1,6 @@
 {
   "name": "@artsnoa/ipc-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TypeScript SDK for IPC API - IP address and country lookup",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

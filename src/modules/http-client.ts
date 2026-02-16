@@ -17,7 +17,7 @@ export async function makeRequestWithFallback<T>(
 
   for (let i = 0; i < urls.length; i++) {
     try {
-      return await makeRequest<T>(urls[i], apiKey, timeout);
+      return await makeRequest<T>(urls[i] as string, apiKey, timeout);
     } catch (error) {
       lastError = error as Error;
       // If this is not the last URL, continue to the next one
@@ -76,11 +76,11 @@ export async function makeRequest<T>(
       let errorCode: string | undefined;
 
       try {
-        const errorData = await response.json();
-        if (errorData.message) {
+        const errorData = await response.json() as any;
+        if (errorData && errorData.message) {
           errorMessage = errorData.message;
         }
-        if (errorData.code) {
+        if (errorData && errorData.code) {
           errorCode = errorData.code;
         }
       } catch {
@@ -115,12 +115,10 @@ export async function makeRequest<T>(
 
     // Handle network errors
     if (error instanceof TypeError) {
-      throw new IPCError(`Network error: ${error.message}`);
+      throw new IPCError('Network error occurred. Please check your connection and try again');
     }
 
-    // Handle unknown errors
-    throw new IPCError(
-      error instanceof Error ? error.message : 'An unknown error occurred'
-    );
+    // Handle unknown errors - do not expose internal error messages
+    throw new IPCError('An unexpected error occurred. Please try again later');
   }
 }
