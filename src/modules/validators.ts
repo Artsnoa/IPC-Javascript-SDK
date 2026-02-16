@@ -1,4 +1,23 @@
-import { IPDetailsResponse, SDKVersionsResponse } from '../types';
+import { IPResponse, IPDetailsResponse, SDKVersionsResponse } from '../types';
+
+/**
+ * Validates the IP response structure
+ *
+ * @param data - Response data to validate
+ * @returns true if valid
+ */
+export function validateIPResponse(data: unknown): data is IPResponse {
+  if (!data || typeof data !== 'object') {
+    return false;
+  }
+
+  const response = data as Record<string, unknown>;
+
+  return (
+    typeof response.ip === 'string' &&
+    typeof response.country === 'string'
+  );
+}
 
 /**
  * Validates the IP details response structure

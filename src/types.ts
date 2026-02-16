@@ -21,6 +21,21 @@ export interface IPCClientOptions {
 }
 
 /**
+ * Response from the IP API
+ */
+export interface IPResponse {
+  /**
+   * IP address
+   */
+  ip: string;
+
+  /**
+   * Country code (ISO 3166-1 alpha-2)
+   */
+  country: string;
+}
+
+/**
  * Response from the IP details API
  */
 export interface IPDetailsResponse {

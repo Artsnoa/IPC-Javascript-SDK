@@ -1,7 +1,7 @@
-import { IPCClientOptions, IPDetailsResponse, SDKVersionsResponse, IPCError } from './types';
+import { IPCClientOptions, IPResponse, IPDetailsResponse, SDKVersionsResponse, IPCError } from './types';
 import { DEFAULT_BASE_URL, DEFAULT_TIMEOUT, API_VERSION } from './modules/constants';
 import { sanitizeBaseUrl, buildUrl } from './modules/url-utils';
-import { validateIPDetailsResponse, validateSDKVersionsResponse } from './modules/validators';
+import { validateIPResponse, validateIPDetailsResponse, validateSDKVersionsResponse } from './modules/validators';
 import { makeRequest } from './modules/http-client';
 
 /**
@@ -34,6 +34,37 @@ export class IPCClient {
     if (this.timeout <= 0 || this.timeout > 60000) {
       throw new IPCError('Timeout must be between 1 and 60000 milliseconds');
     }
+  }
+
+  /**
+   * Retrieves basic IP information from the API
+   *
+   * @returns IP information with country code
+   * @throws {IPCError} If the request fails or response is invalid
+   *
+   * @example
+   * ```typescript
+   * const client = new IPCClient({ apiKey: 'YOUR_API_KEY' });
+   * try {
+   *   const data = await client.getIP();
+   *   console.log(`Your IP: ${data.ip}, Country: ${data.country}`);
+   * } catch (error) {
+   *   if (error instanceof IPCError) {
+   *     console.error(`Error: ${error.message}`);
+   *   }
+   * }
+   * ```
+   */
+  public async getIP(): Promise<IPResponse> {
+    const url = buildUrl(this.baseUrl, `/api/${API_VERSION}/ip`);
+    const data = await makeRequest<unknown>(url, this.apiKey, this.timeout);
+
+    // Validate response structure
+    if (!validateIPResponse(data)) {
+      throw new IPCError('Invalid response structure from API');
+    }
+
+    return data;
   }
 
   /**
