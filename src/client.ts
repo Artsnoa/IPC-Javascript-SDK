@@ -1,5 +1,5 @@
 import { IPCClientOptions, IPResponse, IPDetailsResponse, SDKVersionsResponse, IPCError } from './types';
-import { DEFAULT_BASE_URL, DEFAULT_TIMEOUT } from './modules/constants';
+import { DEFAULT_BASE_URL, FALLBACK_BASE_URL, DEFAULT_TIMEOUT } from './modules/constants';
 import { sanitizeBaseUrl } from './modules/url-utils';
 import { getIP } from './functions/getIP';
 import { getIPDetails } from './functions/getIPDetails';
@@ -16,7 +16,7 @@ import { getSDKVersions } from './functions/getSDKVersions';
  * ```
  */
 export class IPCClient {
-  private readonly baseUrl: string;
+  private readonly baseUrls: string[];
   private readonly apiKey?: string;
   private readonly timeout: number;
 
@@ -26,8 +26,17 @@ export class IPCClient {
    * @param options - Configuration options
    */
   constructor(options: IPCClientOptions = {}) {
-    // Validate and sanitize baseUrl
-    this.baseUrl = sanitizeBaseUrl(options.baseUrl || DEFAULT_BASE_URL);
+    // Validate and sanitize baseUrl(s)
+    if (options.baseUrl) {
+      this.baseUrls = [sanitizeBaseUrl(options.baseUrl)];
+    } else {
+      // Use default base URL with fallback
+      this.baseUrls = [
+        sanitizeBaseUrl(DEFAULT_BASE_URL),
+        sanitizeBaseUrl(FALLBACK_BASE_URL)
+      ];
+    }
+
     this.apiKey = options.apiKey;
     this.timeout = options.timeout || DEFAULT_TIMEOUT;
 
@@ -57,7 +66,7 @@ export class IPCClient {
    * ```
    */
   public async getIP(): Promise<IPResponse> {
-    return getIP(this.baseUrl, this.apiKey, this.timeout);
+    return getIP(this.baseUrls, this.apiKey, this.timeout);
   }
 
   /**
@@ -80,7 +89,7 @@ export class IPCClient {
    * ```
    */
   public async getIPDetails(): Promise<IPDetailsResponse> {
-    return getIPDetails(this.baseUrl, this.apiKey, this.timeout);
+    return getIPDetails(this.baseUrls, this.apiKey, this.timeout);
   }
 
   /**
@@ -103,6 +112,6 @@ export class IPCClient {
    * ```
    */
   public async getSDKVersions(): Promise<SDKVersionsResponse> {
-    return getSDKVersions(this.baseUrl, this.apiKey, this.timeout);
+    return getSDKVersions(this.baseUrls, this.apiKey, this.timeout);
   }
 }
