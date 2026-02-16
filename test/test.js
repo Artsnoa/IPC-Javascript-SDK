@@ -7,6 +7,7 @@
 const BASE_URL = 'https://ipc.artsnoa.com';
 const API_VERSION = 'v1';
 const TIMEOUT = 10000;
+const API_KEY = ''; // Add your API key here if needed
 
 /**
  * Makes a test request to the IPC API
@@ -23,12 +24,19 @@ async function testIPCAPI() {
   try {
     const startTime = Date.now();
 
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+
+    // Add Bearer token if API key is provided
+    if (API_KEY) {
+      headers['Authorization'] = `Bearer ${API_KEY}`;
+    }
+
     const response = await fetch(url, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
+      headers,
       signal: controller.signal,
     });
 

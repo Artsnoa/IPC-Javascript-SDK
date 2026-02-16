@@ -94,9 +94,9 @@ export class IPCClient {
         'Accept': 'application/json',
       };
 
-      // Add API key to headers if provided
+      // Add Bearer token to headers if provided
       if (this.apiKey) {
-        headers['X-API-Key'] = this.apiKey;
+        headers['Authorization'] = `Bearer ${this.apiKey}`;
       }
 
       // @ts-ignore - fetch is available in supported environments
